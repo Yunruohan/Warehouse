@@ -87,30 +87,42 @@
 
         },
         methods: {
-            axiosLR(){
-                let params = {
-                    userPhone: this.registerForm.userPhone,
-                    username: this.registerForm.userName,
-                    userPswd: this.registerForm.userPswd,
-                    drugstoreName: this.registerForm.drugstoreName,
-                    
-                }
-                axios.post(this.url, qs.stringify(params), {
+            axiosLR(type, params){
+                axios.post(this.url, JSON.stringify(params), {
                     headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    'Content-Type': 'application/json'
                     }
                 }).then((res) => {
                     let data = res.data
-                    console.log(res)
+                    console.log(data)
+                    console.log(data.userPhone)
+                    if(data.data.userPhone && type === 1) {
+                        this.centerDialogVisible = false
+                        this.form.username = data.userPhone
+                    }else {
+                        
+                    }
                 })
             },
             login() {
-                this.url = 'api/drugstore/sept/user/register'
-                this.axiosLR()
+                this.url = 'api/drugstore/sept/user/login'
+                let params = {
+                    userPhone: this.form.userPhone,
+                    userPswd: this.form.userPhone
+                }
+                let type = 0
+                this.axiosLR(type, params)
             },
             register() {
                 this.url = 'api/drugstore/sept/user/register'
-                this.axiosLR()
+                let params = {
+                    userPhone: this.registerForm.userPhone,
+                    userName: this.registerForm.userName,
+                    userPswd: this.registerForm.userPswd,
+                    drugstoreName: this.registerForm.drugstoreName,   
+                }
+                let type = 1
+                this.axiosLR(type, params)
             }
         }
     }

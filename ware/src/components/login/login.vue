@@ -100,7 +100,9 @@
                         this.centerDialogVisible = false
                         this.form.username = data.userPhone
                     }else {
-                        
+                        this.$store.userPhone = data.data.userPhone
+                        this.$store.userName = data.data.userName
+                        this.$store.drugstoreName = data.data.drugstoreName
                     }
                 })
             },
@@ -174,7 +176,7 @@
             }
         }
         .submit-btn {
-            background: #00ccff;
+            background: #63B8FF;
             border-radius: 5px;
             text-align: center;
             color: #FFFAF0;

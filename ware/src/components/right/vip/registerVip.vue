@@ -3,57 +3,61 @@
         <h3>会员注册</h3>
         <section class="registerVip_form">
             <el-form :model="form">
-                <el-form-item label="手机号">
+                <el-form-item label="vip手机号">
                     <el-input
                         type="text"
-                        v-model="form.username">
+                        v-model="form.vipPhone">
                     </el-input>
                 </el-form-item>
-                <el-form-item label="用户名">
+                <el-form-item label="vip用户名">
                     <el-input
-                        type="password"
-                        v-model="form.password">
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="密码">
-                    <el-input
-                        type="password"
-                        v-model="form.password">
+                        type="text"
+                        v-model="form.vipName">
                     </el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button style="margin-top: 40px;">注册</el-button>
+                    <el-button style="margin-top: 40px;" @click="axiosLR()">注册</el-button>
                 </el-form-item>
             </el-form>
         </section>
     </div>
 </template>
 <script>
+import axios from  'axios'
 export default {
     data() {
         return {
             form: {
-                beginTime: '',
-                endTime: '',
-                key: '',
-                userPhone: ''
+                vipPhone: '',
+                vipName: ''
             }
         }
     },
     created() {
-        this.axiosLR()
     },
     methods: {
         axiosLR(){
             let url = 'api/drugstore/sept/vip/register'
+            console.log(this.$store.state.userPhone)
+            let params = {
+                vipPhone:this.form.vipPhone,
+                vipName:this.form.vipName,
+                userPhone: this.$store.state.userPhone
+            }
             axios.post(url, JSON.stringify(params), {
                 headers: {
                 'Content-Type': 'application/json'
                 }
             }).then((res) => {
                 let data = res.data
-                console.log(data)
-                this.tableData = data.data.data
+                if(data.data.result) {
+                    this.$message({
+                        showClose: true,
+                        message: '成功提交'
+                    });
+                    this.form.vipPhone = ''
+                    this.form.vipName = ''
+                }
             })
         },
     }

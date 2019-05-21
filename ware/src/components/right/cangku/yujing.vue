@@ -3,21 +3,17 @@
         <div class="search">
              <el-form :model="form">
                 <el-form-item label="预警模式">
+                    <el-select
+                        v-model="form.mode"
+                    >
+                        <el-option label="less" value=0></el-option>
+                        <el-option label="trend" value=1></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="数量">
                     <el-input
                         type="text"
-                        v-model="form.key">
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="药品数量">
-                    <el-input
-                        type="password"
-                        v-model="form.userPhone">
-                    </el-input>
-                </el-form-item>
-                <el-form-item label="药品编号">
-                    <el-input
-                        type="password"
-                        v-model="form.userPhone">
+                        v-model="form.quantity">
                     </el-input>
                 </el-form-item>
                 <el-button style="margin-top: 70px;" @click="axiosLR">查询</el-button>
@@ -39,33 +35,10 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            tableData: [
-                 {
-                    drugId: "12345671234567",
-                    drugName: "999感冒灵",
-                    stockNum: 37,
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "硝基地平",
-                    stockNum: 2,
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "止咳糖浆",
-                    stockNum: 17,
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "头孢",
-                    stockNum: 30,
-                }
-            ],
+            tableData: [],
             form: {
-                beginTime: '',
-                endTime: '',
-                key: '',
-                userPhone: ''
+                mode: '',
+                quantity: '',
             }
         }
     },
@@ -74,13 +47,11 @@ export default {
     },
     methods: {
         axiosLR(){
-            let url = 'api/drugstore/sept/warn'
+            let url = 'api/drugstore/sept/stock/alert'
             let params = {
-                orderType: this.form.orderType,
-                beginTime: this.form.beginTime,
-                endTime: this.form.endTime,
-                key: this.form.key,
-                userPhone: this.form.userPhone                
+                mode: Number(this.form.mode),
+                quantity: Number(this.form.quantity),
+                userPhone: this.$store.state.userPhone                
             }
             axios.post(url, JSON.stringify(params), {
                 headers: {
@@ -89,7 +60,7 @@ export default {
             }).then((res) => {
                 let data = res.data
                 console.log(data)
-                this.tableData = data.data.data
+                this.tableData = data.data.data[0]
             })
         },
     }

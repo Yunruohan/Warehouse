@@ -33,28 +33,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            tableData: [
-                 {
-                    drugId: "12345671234567",
-                    drugName: "999感冒灵",
-                    stockNum: 37,
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "硝基地平",
-                    stockNum: 2,
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "止咳糖浆",
-                    stockNum: 17,
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "头孢",
-                    stockNum: 30,
-                }
-            ],
+            tableData: [],
             form: {
                 key: '',
                 userPhone: ''
@@ -69,7 +48,7 @@ export default {
             let url = 'api/drugstore/sept/stock/show'
             let params = {
                 key: this.form.key,
-                userPhone: this.form.userPhone                
+                userPhone: this.$store.state.userPhone                
             }
             axios.post(url, JSON.stringify(params), {
                 headers: {
@@ -77,8 +56,8 @@ export default {
                 }
             }).then((res) => {
                 let data = res.data
-                console.log(data)
-                this.tableData = data.data.data
+                console.log(data.data[0])
+                this.tableData = data.data[0]
             })
         },
     }

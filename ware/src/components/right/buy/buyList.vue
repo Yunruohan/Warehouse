@@ -5,20 +5,20 @@
                 <el-form-item label="开始时间">
                     <el-date-picker
                         v-model="form.beginTime"
-                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         placeholder="选择开始时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="结束时间">
                     <el-date-picker
                         v-model="form.endTime"
-                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         placeholder="选择结束时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="查找字符串">
                     <el-input
-                        type="password"
+                        type="text"
                         v-model="form.key">
                     </el-input>
                 </el-form-item>
@@ -28,6 +28,7 @@
                         v-model="form.userPhone">
                     </el-input>
                 </el-form-item> -->
+                <el-button style="margin-top: 70px;" @click="axiosLR">查询</el-button>
             </el-form>
         </div>
        
@@ -40,7 +41,7 @@
             <el-table-column prop="quantity" label="药品数量"></el-table-column>
             <el-table-column prop="price" label="药品价格（单位：元）"></el-table-column>
             <el-table-column prop="supplier" label="生成厂家"></el-table-column>
-            <el-table-column prop="date" label="采购日起"></el-table-column>
+            <el-table-column prop="date" label="采购日期"></el-table-column>
 
         </el-table>
     </div>
@@ -50,41 +51,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            tableData: [
-                {
-                    drugId: "12345671234567",
-                    drugName: "999感冒灵",
-                    quantity: 66,
-                    price: 2.50 ,
-                    supplier: "石家庄药厂",
-                    date: "2019-05-08 01:05:40",
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "阵痛药",
-                    quantity: 66,
-                    price: 2.50 ,
-                    supplier: "呼和浩特药厂",
-                    date: "2019-05-08 01:05:40",
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "抗溃疡药",
-                    quantity: 66,
-                    price: 23.50 ,
-                    supplier: "合肥药厂",
-                    date: "2019-05-08 01:05:40",
-                },
-                {
-                    drugId: "12345671234567",
-                    drugName: "阿莫西林",
-                    quantity: 66,
-                    price: 10.00 ,
-                    supplier: "阜阳药厂",
-                    date: "2019-05-08 01:05:40",
-                }
-
-            ],
+            tableData: [],
             form: {
                 beginTime: '',
                 endTime: '',
@@ -99,15 +66,20 @@ export default {
     methods: {
         axiosLR(){
             let url = 'api/drugstore/sept/purchase/show'
-            let params = this.form
+            let params = {
+                beginTime:this.form.beginTime,
+                endTime:this.form.endTime,
+                key:this.form.key,
+                userPhone:this.$store.state.userPhone
+            }
             axios.post(url, JSON.stringify(params), {
                 headers: {
                 'Content-Type': 'application/json'
                 }
             }).then((res) => {
                 let data = res.data
-                console.log(data)
-                this.tableData = data.data.data
+                console.log(data.data)
+                this.tableData = data.data[0]
             })
         },
     }
@@ -127,7 +99,7 @@ export default {
         margin-right: 30px;
     }
     .el-table {
-        width: 95%;
+        width: 100%;
     }
 }
 </style>

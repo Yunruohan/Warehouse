@@ -34,22 +34,21 @@
                     ></el-input>
                 </el-form-item>
                 <el-form-item label="采购日期">
-                    <el-input
-                        type="text"
+                    <el-date-picker
                         v-model="form.date"
-                    ></el-input>
-                </el-form-item>
-                <el-form-item class="icon_remove" style="width:20px;margin-top:75px;">
-                    <i class="el-icon-circle-plus"></i>
+                        format="yyyy 年 MM 月 dd 日"
+                        value-format="yyyy-MM-dd HH-mm-ss">
+                    </el-date-picker>
                 </el-form-item>
             </el-form>
         </section>
         <section class="submit_btn">
-            <el-button type="primary">提交</el-button>
+            <el-button type="primary" @click="axiosLR()">提交</el-button>
         </section>
     </div>
 </template>
 <script>
+import axios from 'axios'
 export default {
     data() {
         return {
@@ -57,7 +56,10 @@ export default {
                 drugId: '',
                 drugName: '',
                 quantity: '',
-                price: ''
+                price: '',
+                supplier: '',
+                date: ''
+
             }
         }
     },
@@ -65,7 +67,38 @@ export default {
 
     },
     methods: {
-
+        axiosLR(){
+            let url = 'api/drugstore/sept/purchase'
+            let params = {
+                drugId:this.form.drugId,
+                drugName:this.form.drugName,
+                quantity:this.form.quantity,
+                price:this.form.price,
+                supplier:this.form.supplier,
+                date:this.form.date,
+                userPhone:this.$store.state.userPhone
+            }
+            axios.post(url, JSON.stringify(params), {
+                headers: {
+                'Content-Type': 'application/json'
+                }
+            }).then((res) => {
+                let data = res.data
+                 if(data.data.result) {
+                    this.$message({
+                        showClose: true,
+                        message: '提交成功'
+                    });
+                    this.form.drugId = ''
+                    this.form.drugName = ''
+                    this.form.quantity = ''
+                    this.form.price = ''
+                    this.form.supplier = ''
+                    this.form.date = ''
+                    this.form.date = ''
+                }
+            })
+        },
     }
 }
 </script>

@@ -6,6 +6,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    validate: 0,
     userPhone: '',
     userName: '',
     userpswd: '',

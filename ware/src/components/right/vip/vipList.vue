@@ -48,44 +48,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            tableData: [
-                {
-                    vipPhone: "12345678999",
-                    vipName: "小宇",
-                    integral: 120,
-                    date: '2019-05-08 00:00:00'
-                },
-                {
-                    vipPhone: "12345678999",
-                    vipName: "小孙",
-                    integral: 120,
-                    date: '2019-05-08 00:00:00'
-                },
-                {
-                    vipPhone: "12345678999",
-                    vipName: "小赵",
-                    integral: 120,
-                    date: '2019-05-08 00:00:00'
-                },
-                {
-                    vipPhone: "12345678999",
-                    vipName: "范小宇",
-                    integral: 120,
-                    date: '2019-05-08 00:00:00'
-                },
-                {
-                    vipPhone: "12345678999",
-                    vipName: "张山",
-                    integral: 120,
-                    date: '2019-05-08 00:00:00'
-                },
-                {
-                    vipPhone: "12345678999",
-                    vipName: "李四",
-                    integral: 120,
-                    date: '2019-05-08 00:00:00'
-                },
-            ],
+            tableData: [],
             form: {
                 beginTime: '',
                 endTime: '',
@@ -95,6 +58,7 @@ export default {
         }
     },
     created() {
+        this.axiosLR()
     },
     methods: {
         axiosLR(){
@@ -103,7 +67,7 @@ export default {
                 beginTime: this.form.beginTime,
                 endTime: this.form.endTime,
                 key: this.form.key,
-                userPhone: this.form.userPhone                
+                userPhone: this.$store.state.userPhone                
             }
             axios.post(url, JSON.stringify(params), {
                 headers: {

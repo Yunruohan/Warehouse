@@ -5,14 +5,14 @@
                 <el-form-item label="开始时间">
                     <el-date-picker
                         v-model="form.beginTime"
-                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         placeholder="选择开始时间">
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="结束时间">
                     <el-date-picker
                         v-model="form.endTime"
-                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
                         placeholder="选择结束时间">
                     </el-date-picker>
                 </el-form-item>
@@ -49,44 +49,7 @@ import axios from 'axios'
 export default {
     data() {
         return {
-            tableData: [
-                {
-                    orderId: 1,
-                    orderType: 1,
-                    vipPhone: "15846852589",
-                    drugId: "1234561234567" ,
-                    quantity: 5,
-                    price: 22.50,
-                    date: "2019-01-01 00:00:00",
-                },
-                {
-                    orderId: 1,
-                    orderType: 1,
-                    vipPhone: "15846852589",
-                    drugId: "12345671234567" ,
-                    quantity: 8,
-                    price: 82.00,
-                    date: "2019-01-01 00:00:00",
-                },
-                {
-                    orderId: 1,
-                    orderType: 1,
-                    vipPhone: "15846852589",
-                    drugId: "12399671234567" ,
-                    quantity: 9,
-                    price: 19.50,
-                    date: "2019-01-01 00:00:00",
-                },
-                {
-                    orderId: 1,
-                    orderType: 1,
-                    vipPhone: "15846852589",
-                    drugId: "12345966234567" ,
-                    quantity: 12,
-                    price: 12.60,
-                    date: "2019-01-01 00:00:00",
-                }
-            ],
+            tableData: [],
             form: {
                 orderType: 0,
                 beginTime: '',
@@ -97,6 +60,7 @@ export default {
         }
     },
     created() {
+         this.axiosLR()
     },
     methods: {
         axiosLR(){
@@ -106,7 +70,7 @@ export default {
                 beginTime: this.form.beginTime,
                 endTime: this.form.endTime,
                 key: this.form.key,
-                userPhone: this.form.userPhone                
+                userPhone: this.$store.state.userPhone                
             }
             axios.post(url, JSON.stringify(params), {
                 headers: {
@@ -115,7 +79,7 @@ export default {
             }).then((res) => {
                 let data = res.data
                 console.log(data)
-                this.tableData = data.data.data
+                this.tableData = data.data[0]
             })
         },
     }

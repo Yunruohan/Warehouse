@@ -3,16 +3,16 @@
        <div class="register_btn" @click="centerDialogVisible = true">免费注册</div>
        <div class="login_input">
         <div class="login_input_title">一款免费，注册即可用的药店进销存管理系统</br>你，值得拥有</div>
-        <el-form ref="login_form" :model="form" :rules="loginRules">
+        <el-form ref="login_form" :model="form">
             <h4>账号登录</h4>
-            <el-form-item prop="username">
+            <el-form-item>
                 <el-input
                     type="text"
                     placeholder="请输入手机号"
                     v-model="form.username">
                 </el-input>
             </el-form-item>
-             <el-form-item prop="password">
+             <el-form-item>
                 <el-input
                     type="password"
                     placeholder="请输入密码"
@@ -20,7 +20,7 @@
                 </el-input>
             </el-form-item>
             <el-form-item>
-                <div class="panel-header-btn submit-btn" @click="register">
+                <div class="panel-header-btn submit-btn" @click="login">
                     <span class="el-icon-loading" v-if="loading"></span>
                     <span>登录</span>
                 </div>
@@ -66,14 +66,6 @@
                     password: ''
                 },
                 loading: false,
-                loginRules: {
-                    username: [
-                        { required: true, message: '请输入电话号码' }
-                    ],
-                    password: [
-                        { required: true, message: '请输入密码' }
-                    ]
-                },
                 centerDialogVisible: false,
                 registerForm: {
                     userPhone: '',
@@ -87,7 +79,8 @@
 
         },
         methods: {
-            axiosLR(type, params){
+            axiosLR(type, params1){
+                let params = params1
                 axios.post(this.url, JSON.stringify(params), {
                     headers: {
                     'Content-Type': 'application/json'
@@ -98,25 +91,30 @@
                     console.log(data.userPhone)
                     if(data.data.userPhone && type === 1) {
                         this.centerDialogVisible = false
-                        this.form.username = data.userPhone
-                    }else {
-                        this.$store.userPhone = data.data.userPhone
-                        this.$store.userName = data.data.userName
-                        this.$store.drugstoreName = data.data.drugstoreName
+                        this.form.username = data.data.userPhone
+                    }else if(data.error === "0" && type === 0){
+                        this.$store.state.validate = 1
+                        this.$store.state.userPhone = data.data.userPhone
+                        this.$store.state.userName = data.data.userName
+                        this.$store.state.drugstoreName = data.data.drugstoreName
+                        this.$router.push('/main/all')
                     }
                 })
             },
             login() {
+                // let baseUrl = 'http://120.79.17.239:8080'.
                 this.url = 'api/drugstore/sept/user/login'
+                // this.url = 'http://120.79.17.239:8080/drugstore/sept/user/login'
                 let params = {
-                    userPhone: this.form.userPhone,
-                    userPswd: this.form.userPhone
+                    userPhone: this.form.username,
+                    userPswd: this.form.password
                 }
                 let type = 0
                 this.axiosLR(type, params)
             },
             register() {
                 this.url = 'api/drugstore/sept/user/register'
+                // this.url = 'http://120.79.17.239:8080/drugstore/sept/user/register'
                 let params = {
                     userPhone: this.registerForm.userPhone,
                     userName: this.registerForm.userName,
